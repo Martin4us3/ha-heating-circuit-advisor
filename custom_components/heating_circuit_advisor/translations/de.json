@@ -55,9 +55,18 @@
       "evaluating": {
         "name": "Auswertung aktiv",
         "state_attributes": {
-          "outdoor_temperature": { "name": "Außentemperatur" },
-          "circuit_setpoint": { "name": "Sollwert Heizkreis" },
-          "circuit_comfort_setpoint": { "name": "Komfortsollwert Heizkreis" }
+          "outdoor_temperature": {
+            "name": "Außentemperatur"
+          },
+          "circuit_setpoint": {
+            "name": "Sollwert Heizkreis"
+          },
+          "circuit_comfort_setpoint": {
+            "name": "Komfortsollwert Heizkreis"
+          },
+          "comfort_known": {
+            "name": "Komfortphase bekannt"
+          }
         }
       }
     },
@@ -73,18 +82,28 @@
           "emission_insufficient": "Heizfläche reicht nicht"
         },
         "state_attributes": {
-          "neediest_room": { "name": "Bedürftigster Raum" },
-          "neediest_loop": { "name": "Bedürftigste Schleife" }
+          "neediest_room": {
+            "name": "Bedürftigster Raum"
+          },
+          "neediest_loop": {
+            "name": "Bedürftigste Schleife"
+          }
         }
       },
       "neediest_share": {
         "name": "Bedürftigste Schleife offen",
         "state_attributes": {
-          "room": { "name": "Raum" },
-          "loop": { "name": "Schleife" }
+          "room": {
+            "name": "Raum"
+          },
+          "loop": {
+            "name": "Schleife"
+          }
         }
       },
-      "mean_share": { "name": "Schleifen im Mittel offen" },
+      "mean_share": {
+        "name": "Schleifen im Mittel offen"
+      },
       "setpoint_hint": {
         "name": "Hinweis Raumsollwert",
         "state": {
@@ -93,24 +112,46 @@
           "raise": "Raumsollwert des Heizkreises anheben"
         },
         "state_attributes": {
-          "difference": { "name": "Abstand" },
-          "circuit_comfort_setpoint": { "name": "Komfortsollwert Heizkreis" },
-          "rooms_highest_setpoint": { "name": "Höchster Raumsollwert" },
-          "rooms_median_setpoint": { "name": "Median der Raumsollwerte" }
+          "difference": {
+            "name": "Abstand"
+          },
+          "circuit_comfort_setpoint": {
+            "name": "Komfortsollwert Heizkreis"
+          },
+          "rooms_highest_setpoint": {
+            "name": "Höchster Raumsollwert"
+          },
+          "rooms_median_setpoint": {
+            "name": "Median der Raumsollwerte"
+          }
         }
       },
-      "collected": { "name": "Daten gesammelt" },
+      "collected": {
+        "name": "Daten gesammelt"
+      },
       "room_share": {
         "name": "Raum {room}",
         "state_attributes": {
           "thermostats": {
             "name": "Thermostate",
-            "state": { "on": "Ein", "off": "Aus", "no_thermostat": "Keine" }
+            "state": {
+              "on": "Ein",
+              "off": "Aus",
+              "no_thermostat": "Keine"
+            }
           },
-          "target": { "name": "Sollwert" },
-          "current": { "name": "Temperatur" },
-          "comfort_setpoint": { "name": "Komfortsollwert" },
-          "loops": { "name": "Schleifen" }
+          "target": {
+            "name": "Sollwert"
+          },
+          "current": {
+            "name": "Temperatur"
+          },
+          "comfort_setpoint": {
+            "name": "Komfortsollwert"
+          },
+          "loops": {
+            "name": "Schleifen"
+          }
         }
       }
     }

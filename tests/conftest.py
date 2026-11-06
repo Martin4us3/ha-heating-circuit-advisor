@@ -99,10 +99,21 @@ def options(house: House, **changes: object) -> dict[str, object]:
     } | changes
 
 
+# A circuit observed for a day: its comfort phase is known, its first sample counts
+A_DAY_AGO = "2026-01-01T00:00:00+00:00"
+
+
+def stored(entry: MockConfigEntry, **memory: object) -> dict[str, object]:
+    """The store of an entry's memory."""
+    key = f"{DOMAIN}.{entry.entry_id}"
+    return {"version": 1, "key": key, "data": {"since": A_DAY_AGO} | memory}
+
+
 @pytest.fixture
-def entry(hass: HomeAssistant, house: House) -> MockConfigEntry:
-    """The circuit's entry, not set up yet."""
+def entry(hass: HomeAssistant, house: House, hass_storage: dict) -> MockConfigEntry:
+    """The circuit's entry, not set up yet, observed for a day."""
     entry = MockConfigEntry(domain=DOMAIN, title="Circuit", unique_id="climate.circuit",
                             data={CONF_CIRCUIT: "climate.circuit"}, options=options(house))
     entry.add_to_hass(hass)
+    hass_storage[f"{DOMAIN}.{entry.entry_id}"] = stored(entry)
     return entry

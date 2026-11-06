@@ -16,6 +16,9 @@ from typing import Any
 COMFORT_TOLERANCE = 0.25
 # A comfort setpoint not reached again for a day and some is forgotten: the setpoint was lowered
 STALE_AFTER = timedelta(hours=26)
+# Until the circuit's target has risen once, or for a day, the highest target seen may be the setback's: set up
+# at 22:40 on 2026-11-06, the circuits' night setpoints were taken for their comfort setpoints
+SETTLE_AFTER = timedelta(hours=24)
 # A loop this open and its room this far below its setpoint: the heat does not get into the room
 FULL_OPEN = 95.0
 DEFICIT_LIMIT = 0.5
@@ -66,6 +69,9 @@ class Memory:
     """What a circuit keeps from sample to sample, and across restarts."""
 
     coverage: float = 0.0
+    # The first sample, and whether the circuit's target has risen since: the comfort phase is known
+    since: datetime | None = None
+    comfort_known: bool = False
     circuit_comfort: Peak | None = None
     room_comfort: dict[str, Peak] = field(default_factory=dict)
     # Per loop [average, weight]: both start at 0, so that average / weight weighs only the time evaluated,
@@ -80,6 +86,8 @@ class Memory:
 
         return {
             "coverage": self.coverage,
+            "since": self.since.isoformat() if self.since else None,
+            "comfort_known": self.comfort_known,
             "circuit_comfort": peak(self.circuit_comfort),
             "room_comfort": {area: peak(p) for area, p in self.room_comfort.items()},
             "loops": {loop: list(values) for loop, values in self.loops.items()},
@@ -108,13 +116,17 @@ class Memory:
             coverage = float(data.get("coverage", 0.0))
         except (TypeError, ValueError):
             coverage = 0.0
+        try:
+            since = datetime.fromisoformat(data["since"])
+        except (TypeError, ValueError, KeyError):
+            since = None
         room_raw = data.get("room_comfort")
         loops_raw = data.get("loops")
         room_raw = room_raw if isinstance(room_raw, dict) else {}
         loops_raw = loops_raw if isinstance(loops_raw, dict) else {}
         rooms = {area: p for area, raw in room_raw.items() if (p := peak(raw))}
         loops = {loop: v for loop, raw in loops_raw.items() if (v := pair(raw))}
-        return cls(coverage, peak(data.get("circuit_comfort")), rooms, loops)
+        return cls(coverage, since, data.get("comfort_known") is True, peak(data.get("circuit_comfort")), rooms, loops)
 
 
 @dataclass(frozen=True)
@@ -191,6 +203,7 @@ class Result:
 
     verdict: str
     evaluating: bool
+    comfort_known: bool
     coverage: float
     outdoor: float | None
     circuit_target: float | None
@@ -217,10 +230,17 @@ def sample(memory: Memory, readings: Readings, settings: Settings, now: datetime
 
     # The circuit's comfort phase: its target at the highest seen in the last day
     target = readings.circuit_target
-    memory.circuit_comfort = _track_peak(memory.circuit_comfort, target, now)
+    if memory.since is None:
+        memory.since = now
+    previous = memory.circuit_comfort
+    if previous is not None and target is not None and target > previous.value:
+        memory.comfort_known = True
+    memory.circuit_comfort = _track_peak(previous, target, now)
     comfort = memory.circuit_comfort
+    settled = memory.since <= now - SETTLE_AFTER
+    known = memory.comfort_known or settled
     in_comfort = target is not None and comfort is not None and target >= comfort.value - COMFORT_TOLERANCE
-    evaluating = in_comfort and readings.outdoor is not None and readings.outdoor < settings.outdoor_limit
+    evaluating = known and in_comfort and readings.outdoor is not None and readings.outdoor < settings.outdoor_limit
     if evaluating:
         memory.coverage += (1 - memory.coverage) * alpha
 
@@ -286,7 +306,10 @@ def sample(memory: Memory, readings: Readings, settings: Settings, now: datetime
         verdict = "ok"
 
     # The circuit's room setpoint against the rooms': the flow follows it as well. Lower it only above every
-    # room, raise it only below most of them (their median), so that one room set apart does not decide
+    # room, raise it only below most of them (their median), so that one room set apart does not decide. The
+    # rooms' schedules are their own: only a day of them tells their comfort setpoints
+    if not settled:
+        comforts = []
     highest = max(comforts, default=None)
     middle = median(comforts) if comforts else None
     hint, difference = "none", None
@@ -298,6 +321,7 @@ def sample(memory: Memory, readings: Readings, settings: Settings, now: datetime
     return Result(
         verdict=verdict,
         evaluating=evaluating,
+        comfort_known=known,
         coverage=memory.coverage,
         outdoor=readings.outdoor,
         circuit_target=target,

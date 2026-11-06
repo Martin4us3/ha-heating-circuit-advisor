@@ -14,7 +14,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry, async_
 from custom_components.heating_circuit_advisor.const import DOMAIN, SAMPLE_INTERVAL, SAVE_DELAY
 from custom_components.heating_circuit_advisor.diagnostics import async_get_config_entry_diagnostics
 
-from .conftest import House, options
+from .conftest import House, options, stored
 
 
 async def setup(hass: HomeAssistant, entry: MockConfigEntry) -> None:
@@ -107,11 +107,7 @@ async def test_a_restart_keeps_the_memory(
     hass: HomeAssistant, entry: MockConfigEntry, hass_storage: dict
 ) -> None:
     """The memory stored is where a restart starts: enough data, the verdict is there at once."""
-    hass_storage[f"{DOMAIN}.{entry.entry_id}"] = {
-        "version": 1,
-        "key": f"{DOMAIN}.{entry.entry_id}",
-        "data": {"coverage": 0.6, "loops": {"switch.bath_valve": [0.0, 0.6]}},
-    }
+    hass_storage[f"{DOMAIN}.{entry.entry_id}"] = stored(entry, coverage=0.6, loops={"switch.bath_valve": [0.0, 0.6]})
     await setup(hass, entry)
     # Closed through 0.6 of weight, open for one sample: about 0.5 %, the living room's 30 % leads
     assert state(hass, entry, "verdict").state == "ok"
@@ -171,4 +167,16 @@ async def test_a_circuit_without_value(hass: HomeAssistant, entry: MockConfigEnt
         hass.states.async_set("climate.circuit", circuit)
     await setup(hass, entry)
     assert state(hass, entry, "evaluating", "binary_sensor").state == "off"
+    assert state(hass, entry, "verdict").state == "collecting"
+
+
+async def test_a_new_circuit_waits_for_its_comfort_phase(
+    hass: HomeAssistant, entry: MockConfigEntry, hass_storage: dict
+) -> None:
+    """Without a day of memory, the first sample does not count: it may be the setback's."""
+    del hass_storage[f"{DOMAIN}.{entry.entry_id}"]
+    await setup(hass, entry)
+    evaluating = state(hass, entry, "evaluating", "binary_sensor")
+    assert evaluating.state == "off"
+    assert evaluating.attributes["comfort_known"] is False
     assert state(hass, entry, "verdict").state == "collecting"

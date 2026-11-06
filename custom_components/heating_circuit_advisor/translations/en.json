@@ -55,9 +55,18 @@
       "evaluating": {
         "name": "Evaluating",
         "state_attributes": {
-          "outdoor_temperature": { "name": "Outdoor temperature" },
-          "circuit_setpoint": { "name": "Circuit setpoint" },
-          "circuit_comfort_setpoint": { "name": "Circuit comfort setpoint" }
+          "outdoor_temperature": {
+            "name": "Outdoor temperature"
+          },
+          "circuit_setpoint": {
+            "name": "Circuit setpoint"
+          },
+          "circuit_comfort_setpoint": {
+            "name": "Circuit comfort setpoint"
+          },
+          "comfort_known": {
+            "name": "Comfort phase known"
+          }
         }
       }
     },
@@ -73,18 +82,28 @@
           "emission_insufficient": "Heating surface insufficient"
         },
         "state_attributes": {
-          "neediest_room": { "name": "Neediest room" },
-          "neediest_loop": { "name": "Neediest loop" }
+          "neediest_room": {
+            "name": "Neediest room"
+          },
+          "neediest_loop": {
+            "name": "Neediest loop"
+          }
         }
       },
       "neediest_share": {
         "name": "Neediest loop open",
         "state_attributes": {
-          "room": { "name": "Room" },
-          "loop": { "name": "Loop" }
+          "room": {
+            "name": "Room"
+          },
+          "loop": {
+            "name": "Loop"
+          }
         }
       },
-      "mean_share": { "name": "Loops open on average" },
+      "mean_share": {
+        "name": "Loops open on average"
+      },
       "setpoint_hint": {
         "name": "Room setpoint hint",
         "state": {
@@ -93,24 +112,46 @@
           "raise": "Raise the circuit's room setpoint"
         },
         "state_attributes": {
-          "difference": { "name": "Difference" },
-          "circuit_comfort_setpoint": { "name": "Circuit comfort setpoint" },
-          "rooms_highest_setpoint": { "name": "Highest room setpoint" },
-          "rooms_median_setpoint": { "name": "Median room setpoint" }
+          "difference": {
+            "name": "Difference"
+          },
+          "circuit_comfort_setpoint": {
+            "name": "Circuit comfort setpoint"
+          },
+          "rooms_highest_setpoint": {
+            "name": "Highest room setpoint"
+          },
+          "rooms_median_setpoint": {
+            "name": "Median room setpoint"
+          }
         }
       },
-      "collected": { "name": "Data collected" },
+      "collected": {
+        "name": "Data collected"
+      },
       "room_share": {
         "name": "Room {room}",
         "state_attributes": {
           "thermostats": {
             "name": "Thermostats",
-            "state": { "on": "On", "off": "Off", "no_thermostat": "None" }
+            "state": {
+              "on": "On",
+              "off": "Off",
+              "no_thermostat": "None"
+            }
           },
-          "target": { "name": "Setpoint" },
-          "current": { "name": "Temperature" },
-          "comfort_setpoint": { "name": "Comfort setpoint" },
-          "loops": { "name": "Loops" }
+          "target": {
+            "name": "Setpoint"
+          },
+          "current": {
+            "name": "Temperature"
+          },
+          "comfort_setpoint": {
+            "name": "Comfort setpoint"
+          },
+          "loops": {
+            "name": "Loops"
+          }
         }
       }
     }

@@ -41,4 +41,5 @@ class EvaluatingSensor(AdvisorEntity, BinarySensorEntity):
             "outdoor_temperature": data.outdoor,
             "circuit_setpoint": data.circuit_target,
             "circuit_comfort_setpoint": data.circuit_comfort_setpoint,
+            "comfort_known": data.comfort_known,
         }
