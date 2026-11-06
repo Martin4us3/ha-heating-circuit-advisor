@@ -121,8 +121,8 @@ async def test_a_restart_keeps_the_memory(
 
 async def test_the_options_reload_the_rooms(hass: HomeAssistant, entry: MockConfigEntry, house: House) -> None:
     """A room taken out of the circuit loses its sensor."""
-    bath = entity_id(hass, entry, "sensor", f"room_{house.bath}")
     await setup(hass, entry)
+    bath = entity_id(hass, entry, "sensor", f"room_{house.bath}")
     hass.config_entries.async_update_entry(entry, options=options(house, areas=[house.living]))
     await hass.async_block_till_done()
     assert entry.state is ConfigEntryState.LOADED
