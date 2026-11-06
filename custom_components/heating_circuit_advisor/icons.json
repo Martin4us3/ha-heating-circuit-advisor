@@ -1,0 +1,23 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "evaluating": { "default": "mdi:timer-sand-paused", "state": { "on": "mdi:timer-sand" } }
+    },
+    "sensor": {
+      "verdict": {
+        "default": "mdi:chart-bell-curve-cumulative",
+        "state": {
+          "curve_too_low": "mdi:arrow-up-bold",
+          "curve_too_high": "mdi:arrow-down-bold",
+          "ok": "mdi:check-circle-outline",
+          "emission_insufficient": "mdi:radiator-off"
+        }
+      },
+      "neediest_share": { "default": "mdi:valve-open" },
+      "mean_share": { "default": "mdi:valve" },
+      "setpoint_hint": { "default": "mdi:thermostat" },
+      "collected": { "default": "mdi:database-clock" },
+      "room_share": { "default": "mdi:heating-coil" }
+    }
+  }
+}

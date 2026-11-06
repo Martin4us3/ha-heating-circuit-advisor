@@ -1,0 +1,118 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Heizkreis hinzufügen",
+        "description": "Jeder Raum ist ein Bereich: Seine Thermostate sind die Klima-Entitäten des Bereichs, seine Heizschleifen die Entitäten des Bereichs mit dem Label. Es wird nichts an die Heizung oder die Thermostate geschrieben.",
+        "data": {
+          "circuit": "Heizkreis",
+          "outdoor_temperature": "Außentemperatur",
+          "areas": "Räume",
+          "loop_label": "Label der Heizschleifen"
+        },
+        "data_description": {
+          "circuit": "Die Klima-Entität des Heizkreises: An ihrer Solltemperatur erkennt die Auswertung Komfortphase und Absenkung.",
+          "outdoor_temperature": "Nur unterhalb der Grenze zeigt sich die Heizkurve in den Ventilen.",
+          "areas": "Die Bereiche, die der Heizkreis beheizt.",
+          "loop_label": "Das Label an jedem Ventil dieser Räume: Stellantrieb einer Fußbodenschleife (Schalter oder Level in %), Ventil oder Ventilöffnung eines Heizkörperthermostats. Ein Ventil mit eigenem Bereich gehört zu diesem Raum."
+        }
+      }
+    },
+    "error": {
+      "no_areas": "Wähle mindestens einen Raum."
+    },
+    "abort": {
+      "already_configured": "Dieser Heizkreis ist schon hinzugefügt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Räume und Einstellungen",
+        "data": {
+          "outdoor_temperature": "Außentemperatur",
+          "areas": "Räume",
+          "loop_label": "Label der Heizschleifen",
+          "outdoor_limit": "Auswerten unter",
+          "window_hours": "Mittelungszeitraum",
+          "low_share": "Kurve zu hoch unter",
+          "high_share": "Kurve zu niedrig über"
+        },
+        "data_description": {
+          "outdoor_limit": "Nur wenn es draußen kälter ist, zeigt sich die Heizkurve in den Ventilen.",
+          "window_hours": "Stunden ausgewerteter Zeit, über die die Anteile gemittelt werden.",
+          "low_share": "Die bedürftigste Schleife ist weniger als diesen Anteil der Zeit offen.",
+          "high_share": "Die bedürftigste Schleife ist mehr als diesen Anteil der Zeit offen."
+        }
+      }
+    },
+    "error": {
+      "no_areas": "Wähle mindestens einen Raum."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "evaluating": {
+        "name": "Auswertung aktiv",
+        "state_attributes": {
+          "outdoor_temperature": { "name": "Außentemperatur" },
+          "circuit_setpoint": { "name": "Sollwert Heizkreis" },
+          "circuit_comfort_setpoint": { "name": "Komfortsollwert Heizkreis" }
+        }
+      }
+    },
+    "sensor": {
+      "verdict": {
+        "name": "Heizkurve",
+        "state": {
+          "collecting": "Sammelt Daten",
+          "no_loops": "Keine Heizschleifen",
+          "ok": "Passt",
+          "curve_too_low": "Zu niedrig",
+          "curve_too_high": "Zu hoch",
+          "emission_insufficient": "Heizfläche reicht nicht"
+        },
+        "state_attributes": {
+          "neediest_room": { "name": "Bedürftigster Raum" },
+          "neediest_loop": { "name": "Bedürftigste Schleife" }
+        }
+      },
+      "neediest_share": {
+        "name": "Bedürftigste Schleife offen",
+        "state_attributes": {
+          "room": { "name": "Raum" },
+          "loop": { "name": "Schleife" }
+        }
+      },
+      "mean_share": { "name": "Schleifen im Mittel offen" },
+      "setpoint_hint": {
+        "name": "Hinweis Raumsollwert",
+        "state": {
+          "none": "Keiner",
+          "lower": "Raumsollwert des Heizkreises senken",
+          "raise": "Raumsollwert des Heizkreises anheben"
+        },
+        "state_attributes": {
+          "difference": { "name": "Abstand" },
+          "circuit_comfort_setpoint": { "name": "Komfortsollwert Heizkreis" },
+          "rooms_highest_setpoint": { "name": "Höchster Raumsollwert" },
+          "rooms_median_setpoint": { "name": "Median der Raumsollwerte" }
+        }
+      },
+      "collected": { "name": "Daten gesammelt" },
+      "room_share": {
+        "name": "Raum {room}",
+        "state_attributes": {
+          "thermostats": {
+            "name": "Thermostate",
+            "state": { "on": "Ein", "off": "Aus", "no_thermostat": "Keine" }
+          },
+          "target": { "name": "Sollwert" },
+          "current": { "name": "Temperatur" },
+          "comfort_setpoint": { "name": "Komfortsollwert" },
+          "loops": { "name": "Schleifen" }
+        }
+      }
+    }
+  }
+}

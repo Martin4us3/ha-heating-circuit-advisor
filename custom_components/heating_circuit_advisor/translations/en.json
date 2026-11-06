@@ -1,0 +1,118 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Add a heating circuit",
+        "description": "Every room is an area: its thermostats are the area's climate entities, its heating loops the area's entities with the label. Nothing is written to the heater or the thermostats.",
+        "data": {
+          "circuit": "Heating circuit",
+          "outdoor_temperature": "Outdoor temperature",
+          "areas": "Rooms",
+          "loop_label": "Heating loop label"
+        },
+        "data_description": {
+          "circuit": "The circuit's climate entity: its target temperature tells the comfort phase from the setback.",
+          "outdoor_temperature": "Only below the limit outside does the curve show in the valves.",
+          "areas": "The areas the circuit heats.",
+          "loop_label": "The label on each valve of these rooms: a floor loop's actuator (switch or level in %), a valve, or a radiator thermostat's valve level. A valve with its own area belongs to that room."
+        }
+      }
+    },
+    "error": {
+      "no_areas": "Choose at least one room."
+    },
+    "abort": {
+      "already_configured": "This heating circuit is already added."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Rooms and settings",
+        "data": {
+          "outdoor_temperature": "Outdoor temperature",
+          "areas": "Rooms",
+          "loop_label": "Heating loop label",
+          "outdoor_limit": "Evaluate below",
+          "window_hours": "Averaging window",
+          "low_share": "Curve too high below",
+          "high_share": "Curve too low above"
+        },
+        "data_description": {
+          "outdoor_limit": "Only colder than this outside does the curve show in the valves.",
+          "window_hours": "Hours of evaluated time the shares are averaged over.",
+          "low_share": "The neediest loop open less than this share of the time.",
+          "high_share": "The neediest loop open more than this share of the time."
+        }
+      }
+    },
+    "error": {
+      "no_areas": "Choose at least one room."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "evaluating": {
+        "name": "Evaluating",
+        "state_attributes": {
+          "outdoor_temperature": { "name": "Outdoor temperature" },
+          "circuit_setpoint": { "name": "Circuit setpoint" },
+          "circuit_comfort_setpoint": { "name": "Circuit comfort setpoint" }
+        }
+      }
+    },
+    "sensor": {
+      "verdict": {
+        "name": "Heating curve",
+        "state": {
+          "collecting": "Collecting data",
+          "no_loops": "No heating loops",
+          "ok": "Fits",
+          "curve_too_low": "Too low",
+          "curve_too_high": "Too high",
+          "emission_insufficient": "Heating surface insufficient"
+        },
+        "state_attributes": {
+          "neediest_room": { "name": "Neediest room" },
+          "neediest_loop": { "name": "Neediest loop" }
+        }
+      },
+      "neediest_share": {
+        "name": "Neediest loop open",
+        "state_attributes": {
+          "room": { "name": "Room" },
+          "loop": { "name": "Loop" }
+        }
+      },
+      "mean_share": { "name": "Loops open on average" },
+      "setpoint_hint": {
+        "name": "Room setpoint hint",
+        "state": {
+          "none": "None",
+          "lower": "Lower the circuit's room setpoint",
+          "raise": "Raise the circuit's room setpoint"
+        },
+        "state_attributes": {
+          "difference": { "name": "Difference" },
+          "circuit_comfort_setpoint": { "name": "Circuit comfort setpoint" },
+          "rooms_highest_setpoint": { "name": "Highest room setpoint" },
+          "rooms_median_setpoint": { "name": "Median room setpoint" }
+        }
+      },
+      "collected": { "name": "Data collected" },
+      "room_share": {
+        "name": "Room {room}",
+        "state_attributes": {
+          "thermostats": {
+            "name": "Thermostats",
+            "state": { "on": "On", "off": "Off", "no_thermostat": "None" }
+          },
+          "target": { "name": "Setpoint" },
+          "current": { "name": "Temperature" },
+          "comfort_setpoint": { "name": "Comfort setpoint" },
+          "loops": { "name": "Loops" }
+        }
+      }
+    }
+  }
+}

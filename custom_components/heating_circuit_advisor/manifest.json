@@ -1,0 +1,13 @@
+{
+  "domain": "heating_circuit_advisor",
+  "name": "Heating Circuit Advisor",
+  "codeowners": ["@Martin4us3"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/Martin4us3/ha-heating-circuit-advisor",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/Martin4us3/ha-heating-circuit-advisor/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
