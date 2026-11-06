@@ -81,8 +81,9 @@ One device per circuit:
 
 ## Installation
 
-Through [HACS](https://hacs.xyz/) as a custom repository (category integration), or copy
-`custom_components/heating_circuit_advisor` into your configuration's `custom_components`.
+Through the Marketplace (Settings → Marketplace → Add from link; [HACS](https://hacs.xyz/) as a custom
+repository before Home Assistant 2026.11), or copy `custom_components/heating_circuit_advisor` into your
+configuration's `custom_components`.
 
 ## License
 
