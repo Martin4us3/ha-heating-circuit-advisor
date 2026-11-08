@@ -1,4 +1,4 @@
-"""Adding a circuit, and changing its rooms and settings."""
+"""Adding a circuit, changing its climate, and changing its rooms and settings."""
 
 from __future__ import annotations
 
@@ -41,6 +41,10 @@ def _number(minimum: float, maximum: float, step: float, unit: str) -> selector.
         )
     )
 
+
+_CIRCUIT_SCHEMA = vol.Schema(
+    {vol.Required(CONF_CIRCUIT): selector.EntitySelector(selector.EntitySelectorConfig(domain="climate"))}
+)
 
 _ROOMS_SCHEMA = vol.Schema(
     {
@@ -85,11 +89,25 @@ class AdvisorConfigFlow(ConfigFlow, domain=DOMAIN):
                 )
             user_input[CONF_CIRCUIT] = circuit
 
-        schema = vol.Schema(
-            {vol.Required(CONF_CIRCUIT): selector.EntitySelector(selector.EntitySelectorConfig(domain="climate"))}
-        ).extend(_ROOMS_SCHEMA.schema)
+        schema = _CIRCUIT_SCHEMA.extend(_ROOMS_SCHEMA.schema)
         return self.async_show_form(
             step_id="user", data_schema=self.add_suggested_values_to_schema(schema, user_input), errors=errors
+        )
+
+    async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+        """Another climate for the circuit, e.g. after its entity ID was renamed.
+
+        Title, rooms, settings and what the circuit has learned stay.
+        """
+        entry = self._get_reconfigure_entry()
+        if user_input is not None:
+            circuit = user_input[CONF_CIRCUIT]
+            if circuit != entry.unique_id:
+                await self.async_set_unique_id(circuit)
+                self._abort_if_unique_id_configured()
+            return self.async_update_reload_and_abort(entry, unique_id=circuit, data_updates={CONF_CIRCUIT: circuit})
+        return self.async_show_form(
+            step_id="reconfigure", data_schema=self.add_suggested_values_to_schema(_CIRCUIT_SCHEMA, entry.data)
         )
 
     @staticmethod
