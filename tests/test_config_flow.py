@@ -1,8 +1,8 @@
-"""Adding a circuit, and changing its rooms and settings."""
+"""Adding a circuit, changing its climate, and changing its rooms and settings."""
 
 from __future__ import annotations
 
-from homeassistant.config_entries import SOURCE_USER
+from homeassistant.config_entries import SOURCE_USER, ConfigEntryState
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from pytest_homeassistant_custom_component.common import MockConfigEntry
@@ -78,3 +78,43 @@ async def test_the_options(hass: HomeAssistant, entry: MockConfigEntry, house: H
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert entry.options == changed
     assert entry.runtime_data.settings.high_share == 80.0
+
+
+async def test_reconfiguring_the_climate(hass: HomeAssistant, entry: MockConfigEntry, house: House) -> None:
+    """A renamed climate: the circuit follows it, keeps title, rooms and settings, and is set up again."""
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    hass.states.async_set("climate.renamed", "heat", {"temperature": 21.0, "friendly_name": "Renamed"})
+
+    result = await entry.start_reconfigure_flow(hass)
+    assert result["type"] is FlowResultType.FORM
+    assert result["step_id"] == "reconfigure"
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {"circuit": "climate.renamed"})
+    await hass.async_block_till_done()
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "reconfigure_successful"
+    assert entry.data == {"circuit": "climate.renamed"}
+    assert entry.unique_id == "climate.renamed"
+    assert entry.title == "Circuit"
+    assert entry.options == options(house)
+    assert entry.state is ConfigEntryState.LOADED
+
+
+async def test_reconfiguring_keeps_the_same_climate(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+    """Saving the form unchanged is no conflict with the circuit itself."""
+    result = await entry.start_reconfigure_flow(hass)
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {"circuit": "climate.circuit"})
+    await hass.async_block_till_done()
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "reconfigure_successful"
+    assert entry.unique_id == "climate.circuit"
+
+
+async def test_reconfiguring_to_another_circuits_climate(hass: HomeAssistant, entry: MockConfigEntry) -> None:
+    """A climate that already is another circuit is not taken over."""
+    MockConfigEntry(domain=DOMAIN, unique_id="climate.other", data={"circuit": "climate.other"}).add_to_hass(hass)
+    result = await entry.start_reconfigure_flow(hass)
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {"circuit": "climate.other"})
+    assert result["type"] is FlowResultType.ABORT
+    assert result["reason"] == "already_configured"
+    assert entry.data == {"circuit": "climate.circuit"}

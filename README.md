@@ -49,6 +49,10 @@ The room that needs most heat decides, not the average: the curve has to serve i
 3. **Add the integration** (Settings → Devices & services → Add integration → Heating Circuit Advisor) once per
    circuit: the circuit's climate, the outdoor temperature, the circuit's rooms and the label.
 
+Later, **Configure** changes the rooms, the label, the outdoor temperature and the settings. **Reconfigure** changes
+the circuit's climate, e.g. after its entity ID was renamed; title, rooms, settings and what the circuit has
+learned stay. Renamed loops are found again by their label, but start their averages anew.
+
 Special cases:
 
 - **A room without a thermostat** (an open kitchen heated by the dining room's thermostat): put it in the circuit

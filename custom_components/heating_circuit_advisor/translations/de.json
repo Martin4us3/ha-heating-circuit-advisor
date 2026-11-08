@@ -16,13 +16,24 @@
           "areas": "Die Bereiche, die der Heizkreis beheizt.",
           "loop_label": "Das Label an jedem Ventil dieser Räume: Stellantrieb einer Fußbodenschleife (Schalter oder Level in %), Ventil oder Ventilöffnung eines Heizkörperthermostats. Ein Ventil mit eigenem Bereich gehört zu diesem Raum."
         }
+      },
+      "reconfigure": {
+        "title": "Klima-Entität des Heizkreises ändern",
+        "description": "Für eine Klima-Entität mit geänderter Entitäts-ID, oder wenn eine andere Klima-Entität den Heizkreis zeigt. Räume, Einstellungen und das Gelernte bleiben erhalten.",
+        "data": {
+          "circuit": "Heizkreis"
+        },
+        "data_description": {
+          "circuit": "Die Klima-Entität des Heizkreises: An ihrer Solltemperatur erkennt die Auswertung Komfortphase und Absenkung."
+        }
       }
     },
     "error": {
       "no_areas": "Wähle mindestens einen Raum."
     },
     "abort": {
-      "already_configured": "Dieser Heizkreis ist schon hinzugefügt."
+      "already_configured": "Dieser Heizkreis ist schon hinzugefügt.",
+      "reconfigure_successful": "Die Klima-Entität des Heizkreises ist geändert."
     }
   },
   "options": {

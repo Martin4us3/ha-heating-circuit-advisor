@@ -16,13 +16,24 @@
           "areas": "The areas the circuit heats.",
           "loop_label": "The label on each valve of these rooms: a floor loop's actuator (switch or level in %), a valve, or a radiator thermostat's valve level. A valve with its own area belongs to that room."
         }
+      },
+      "reconfigure": {
+        "title": "Change the heating circuit's climate",
+        "description": "For a climate whose entity ID changed, or a circuit now shown by another climate. Rooms, settings and what the circuit has learned stay.",
+        "data": {
+          "circuit": "Heating circuit"
+        },
+        "data_description": {
+          "circuit": "The circuit's climate entity: its target temperature tells the comfort phase from the setback."
+        }
       }
     },
     "error": {
       "no_areas": "Choose at least one room."
     },
     "abort": {
-      "already_configured": "This heating circuit is already added."
+      "already_configured": "This heating circuit is already added.",
+      "reconfigure_successful": "The heating circuit's climate is changed."
     }
   },
   "options": {
