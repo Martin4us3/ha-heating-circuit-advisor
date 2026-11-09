@@ -61,6 +61,45 @@ Special cases:
 - **A radiator thermostat** is a climate too: give its valve level entity the label. A climate entity with the
   label is a loop (heating or not), not a thermostat.
 
+## Acting on a verdict
+
+The integration only advises; you change the curve on the heater, the way its manual describes.
+
+1. **Wait for a verdict.** Collecting data takes at least a day of cold comfort phases; a mild week takes longer.
+2. **Check the neediest room first.** Its attributes list its thermostats, setpoint, temperature and loops. A
+   window left open, a thermostat set far above the others, or a loop that is off for good can make one room
+   look needy. Fix that, not the curve.
+3. **Check the circuit's room setpoint.** If the setpoint hint says lower or raise, do that first: it shifts the
+   flow temperature like the curve does, and it is the smaller change.
+4. **Change one thing, by one step:** the curve's correction (or parallel shift) by 1 K, or its slope by one
+   step. Note the date.
+5. **Wait two days** at similar outdoor temperatures. A new curve changes the shares only as fast as the window
+   moves on; the floor's own heat store slows it down further.
+6. **Repeat** until the verdict says it fits. If the neediest room changes with every step, the curve is close:
+   leave it.
+
+An example: a floor-heating circuit, 6 °C outside. The bathroom's loop is open 85 % of the comfort phase, every
+other room's 20 to 40 %. The verdict is *Too low*. The bathroom's attributes show its setpoint at 24 °C, the
+others at 21 °C: the bathroom asks for more than the curve was made for. Lowering it to 22 °C brings its share
+to 55 %, and the verdict to *Fits*, without touching the curve.
+
+## Feedback wanted
+
+This integration was built on one house: underfloor heating with time-proportioned and motorised actuators,
+two radiator thermostats, and a pellet boiler that runs four circuits. It should fit many more, and I would like
+to hear how it does on yours:
+
+- **Your setup:** the heater, the circuits (floor, radiators, mixed), the thermostats and valves.
+- **The verdicts:** do they match what you see in the rooms? Did a change of the curve that it suggested help?
+- **The limits:** are 15 % and 70 % right for your loops, and is 24 hours a good window?
+- **What is missing:** a room or valve type it does not understand, a hint you would like, a translation.
+
+Open a [discussion](../../discussions) for results and ideas, or an [issue](../../issues/new/choose) for a bug.
+Please leave out personal details: rooms named "Room 1" or "bathroom" are enough.
+
+Planned next: aligning the heater's schedule with the thermostats' (any room in comfort → the circuit in
+comfort), first in a mode that only shows what it would do. Tell me whether you would use it.
+
 ## Entities
 
 One device per circuit:

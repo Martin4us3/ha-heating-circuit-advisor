@@ -1,0 +1,28 @@
+title: "Results: "
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for trying it! Please leave out personal details (names, addresses, real room names).
+  - type: textarea
+    id: setup
+    attributes:
+      label: Your setup
+      description: The heater, its circuits (floor, radiators, mixed), the thermostats and valves.
+    validations:
+      required: true
+  - type: textarea
+    id: verdicts
+    attributes:
+      label: What it said
+      description: The verdicts and shares per circuit, and the outdoor temperatures.
+    validations:
+      required: true
+  - type: textarea
+    id: match
+    attributes:
+      label: Does it match what you see?
+      description: Rooms too cold or too warm, a curve change it suggested and what happened after it.
+  - type: textarea
+    id: wishes
+    attributes:
+      label: What is missing or should change
